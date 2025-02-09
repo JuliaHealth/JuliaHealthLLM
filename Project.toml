@@ -1,0 +1,9 @@
+name = "JuliaHealthLLM"
+authors = ["Jacob S. Zelko", "Param Thakkar"]
+
+[deps]
+DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
+
+[compat]
+DrWatson = "2.18"
+julia = "1.10.5"
