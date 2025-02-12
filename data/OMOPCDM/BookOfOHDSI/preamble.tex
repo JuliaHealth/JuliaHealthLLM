@@ -1,0 +1,146 @@
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{amsthm}
+\usepackage{xcolor}
+
+\usepackage{makeidx}
+\makeindex
+\usepackage[nottoc]{tocbibind}
+
+\makeatletter
+\def\thm@space@setup{%
+  \thm@preskip=8pt plus 2pt minus 4pt
+  \thm@postskip=\thm@preskip
+}
+\makeatother
+
+\definecolor{myShadeColor}{gray}{0.93}
+
+\makeatletter
+\newenvironment{kframe}{%
+\medskip{}
+\setlength{\fboxsep}{.8em}
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{myShadeColor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\makeatletter
+\@ifundefined{Shaded}{
+}{\renewenvironment{Shaded}{\begin{kframe}}{\end{kframe}}}
+\makeatother
+
+\newenvironment{rmdblock}[1]
+  {
+  \begin{itemize}
+  \renewcommand{\labelitemi}{
+    \raisebox{-.7\height}[0pt][0pt]{
+      {\setkeys{Gin}{width=3em,keepaspectratio}\includegraphics{images/#1}}
+    }
+  }
+  \setlength{\fboxsep}{1em}
+  \begin{kframe}
+  \item
+  }
+  {
+  \end{kframe}
+  \end{itemize}
+  }
+\newenvironment{rmdimportant}
+  {\begin{rmdblock}{important}}
+  {\end{rmdblock}}
+\newenvironment{rmdsummary}
+  {\begin{rmdblock}{summary}}
+  {\end{rmdblock}}
+
+%\sloppy % helps with poorly wrapped URLs, but can look ugly in places
+%\AtBeginDocument{\raggedright}
+
+%\usepackage{fontspec} % Requires xelatex
+%\setmainfont{Arial}
+
+\let\llncsparagraph\paragraph
+\let\paragraph\subsection
+\let\llncssubparagraph\subparagraph
+\let\subparagraph\paragraph
+
+\usepackage{titlesec}
+%\titleformat{\chapter}% reformat chapter headings
+%   [hang]% like section, with number on same line
+%   {\Huge\bfseries\sffamily}% formatting applied to whole
+%   {Chapter \thechapter:}% Chapter number
+%   {0.5em}% space between # and title
+%   {}% formatting applied just to title
+
+\titleformat{\part}% reformat chapter headings
+   [display]% like section, with number on same line
+   {\center\huge\bfseries\sffamily}% formatting applied to whole
+   {Part \thepart}% Chapter number
+   {1.0em}% space between # and title
+   {\Huge}% formatting applied just to title
+
+\titleformat{\chapter}% reformat chapter headings
+   [display]% like section, with number on same line
+   {\huge\bfseries\sffamily}% formatting applied to whole
+   {Chapter \thechapter}% Chapter number
+   {1.0em}% space between # and title
+   {\Huge}% formatting applied just to title
+
+\titleformat{\section}% reformat chapter headings
+   [hang]% like section, with number on same line
+   {\Large\bfseries\sffamily}% formatting applied to whole
+   {\thesection}% Chapter number
+   {1.0em}% space between # and title
+   {}% formatting applied just to title
+
+\titleformat{\subsection}% reformat chapter headings
+   [hang]% like section, with number on same line
+   {\large\bfseries\sffamily}% formatting applied to whole
+   {\thesubsection}% Chapter number
+   {1.0em}% space between # and title
+   {}% formatting applied just to title
+
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}{}{0em}{}
+
+\let\paragraph\llncsparagraph
+\let\subparagraph\llncssubparagraph
+
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},fontsize=\small}
+
+% This is how to remove allcaps from chapter header without fancyhdr. Couldn't figure out how to do it for the section header:
+%\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter.\ #1}{}}
+
+\usepackage{fancyhdr}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\itshape\nouppercase{\rightmark}}
+\fancyhead[RE]{\itshape\nouppercase{\leftmark}}
+\renewcommand{\headrulewidth}{0pt}
+
+\setlength{\headheight}{13.6pt} % Avoids warning: Package Fancyhdr Warning: \headheight is too small (12.0pt)
+
+% Change font of title/author/date on title page
+\usepackage{titling}
+\pretitle{\begin{center}\Huge\sffamily}
+\posttitle{\end{center}}
+% \preauthor{\begin{center}\large\sffamily}
+% \postauthor{\par\end{center}}
+% \predate{\begin{center}\sffamily}
+% \postdate{\par\end{center}}
+
+\frontmatter
