@@ -65,3 +65,17 @@ Here is how the layout of this project is made:
                         Includes DrWatson by default.
 ```
 
+# License Notices
+
+This repository contains code and data from several external repositories. Their respective licenses are:
+
+## CommonDataModel
+The OHDSI CommonDataModel is licensed under Creative Commons CC BY-SA 4.0. See their [LICENSE](data/exp_raw/CommonDataModel/LICENSE) file for details.
+
+## FunSQL.jl
+
+## OMOPCDMCohortCreator.jl  
+
+## TheBookOfOhdsi
+
+Please refer to each repository's individual LICENSE file for the complete license text and terms.
