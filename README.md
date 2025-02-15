@@ -70,12 +70,13 @@ Here is how the layout of this project is made:
 This repository contains code and data from several external repositories. Their respective licenses are:
 
 ## CommonDataModel
-The OHDSI CommonDataModel is licensed under Creative Commons CC BY-SA 4.0. See their [LICENSE](data/exp_raw/CommonDataModel/LICENSE) file for details.
+The OHDSI CommonDataModel is licensed under Creative Commons CC BY-SA 4.0. See their [LICENSE](https://github.com/OHDSI/CommonDataModel/blob/561c93dc650b85dd340842ec22b3d8498ad9215b/docs/site_libs/jqueryui-1.13.2/LICENSE.txt) file for details.
 
 ## FunSQL.jl
+This project includes content from [FunSQL.jl](https://github.com/MechanicalRabbit/FunSQL.jl), licensed under the [MIT License](https://github.com/MechanicalRabbit/FunSQL.jl?tab=License-1-ov-file).
 
 ## OMOPCDMCohortCreator.jl  
+This project includes content from [OMOPCDMCohortCreator.jl](https://github.com/JuliaHealth/OMOPCDMCohortCreator.jl), licensed under the [Apache License 2.0](https://github.com/JuliaHealth/OMOPCDMCohortCreator.jl?tab=License-1-ov-file).
 
 ## TheBookOfOhdsi
-
-Please refer to each repository's individual LICENSE file for the complete license text and terms.
+This project includes content from [TheBookOfOhdsi](https://github.com/OHDSI/TheBookOfOhdsi), licensed under [CC0 1.0 Universal (Public Domain Dedication)](https://github.com/OHDSI/TheBookOfOhdsi?tab=CC0-1.0-1-ov-file).
