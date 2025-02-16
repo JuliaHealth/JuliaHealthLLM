@@ -2,7 +2,10 @@ name = "JuliaHealthLLM"
 authors = ["Jacob S. Zelko", "Param Thakkar"]
 
 [deps]
+Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
 [compat]
 DrWatson = "2.18"
