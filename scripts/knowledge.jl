@@ -60,23 +60,6 @@ function build_corpus_from_repo(repo_input::String)
     return corpus
 end
 
-function analyze_corpus(corpus::Corpus)
-    println("\nCorpus Analysis:")
-    println("Number of documents: ", length(corpus))
-    println("Lexicon size: ", length(lexicon(corpus)))
-    
-    words_of_interest = ["julia", "function", "type", "performance"]
-    println("\nWord frequencies:")
-    for word in words_of_interest
-        freq = lexical_frequency(corpus, word)
-        println("$word: $freq")
-    end
-    
-    search_word = "julia"
-    doc_indices = corpus[search_word]
-    println("\nDocuments containing '$search_word': ", length(doc_indices))
-end
-
 function save_corpus(corpus::Corpus, repo_input::String)
     current_dir = pwd()
     safe_repo_name = split(normalize_repo_url(repo_input), "/")[end] |> x -> replace(x, ".git" => "") |> x -> replace(x, r"[^a-zA-Z0-9_]" => "_")
@@ -114,7 +97,6 @@ function main()
     
     try
         corpus = build_corpus_from_repo(repo_input)
-        analyze_corpus(corpus)
         save_corpus(corpus, repo_input)
         return corpus
     catch e
