@@ -1,75 +1,118 @@
+using LibGit2
 using Dates
 
 function update_and_record_submodules()
     try
-        git_root = nothing
+        repo_path = nothing
         try
-            git_root = strip(read(`git rev-parse --show-toplevel`, String))
+            repo = LibGit2.GitRepo(".")
+            repo_path = LibGit2.path(repo)
+            LibGit2.close(repo)
         catch
             error("Not inside a git repository")
         end
         
-        if isempty(git_root) || !isdir(git_root)
+        if isnothing(repo_path) || !isdir(repo_path)
             error("Could not determine git repository root")
         end
 
-        output_file = joinpath(git_root, "submodule_hashes.txt")
+        output_file = joinpath(repo_path, "submodule_hashes.txt")
         
-        cd(git_root) do
-            println("Working in git repository root: $git_root")
-            
-            println("Initializing submodules...")
-            run(`git submodule init`)
-            
-            println("\nUpdating submodules to latest commits...")
-            run(`git submodule update --remote --recursive`)
-            
-            println("\nRecording submodule states...")
-            submodules_output = read(`git submodule status --recursive`, String)
-            if isempty(strip(submodules_output))
-                println("No submodules found in this repository")
-                return
-            end
-
-            open(output_file, "w") do io
-                println(io, "Submodule Commit Hashes - Recorded on: ", Dates.now())
-                println(io, "=========================================")
-                
-                for line in split(submodules_output, '\n')
-                    if !isempty(strip(line))
-                        parts = split(strip(line))
-                        if length(parts) >= 2
-                            commit_hash = parts[1]
-                            commit_hash = replace(commit_hash, r"^[+-]" => "")
-                            path = parts[2]
-                            
-                            println("Recording: $path @ $commit_hash")
-                            println(io, "Path: $path")
-                            println(io, "Commit: $commit_hash")
-                            println(io, "")
+        repo = LibGit2.GitRepo(repo_path)
+        println("Working in git repository root: $repo_path")
+        
+        config = LibGit2.GitConfig(repo)
+        submodules = Dict{String,String}()
+        
+        println("Discovering submodules...")
+        gitmodules_path = joinpath(repo_path, ".gitmodules")
+        if isfile(gitmodules_path)
+            LibGit2.with(LibGit2.GitConfig(gitmodules_path)) do cfg
+                for i in 1:100 
+                    try
+                        path = LibGit2.get(cfg, "submodule.sub$i.path", "")
+                        if !isempty(path)
+                            submodules[path] = ""
                         end
+                    catch
+                        break
                     end
                 end
             end
-            
-            println("\nChecking for changes to commit...")
-            status_output = read(`git status --porcelain`, String)
-            
-            if !isempty(strip(status_output))
-                println("Committing submodule updates...")
-                run(`git add .gitmodules`)
-                run(`git add $output_file`)
-                run(`git commit -m "Updated submodules to latest commits and recorded hashes"`)
-                println("Changes committed successfully")
-            else
-                println("No changes to commit - submodules were already up to date")
-            end
-            
-            println("\nSubmodule updates completed!")
-            println("Hashes recorded in: $output_file")
-            println("Current status:")
-            run(`git submodule status --recursive`)
         end
+
+        if isempty(submodules)
+            println("No submodules found in this repository")
+            LibGit2.close(repo)
+            return
+        end
+
+        println("Initializing submodules...")
+        println("\nUpdating submodules to latest commits...")
+        
+        for (submod_path, _) in submodules
+            try
+                submod = LibGit2.GitSubmodule(repo, submod_path)
+                
+                if !LibGit2.isinit(submod)
+                    LibGit2.set_init(submod)
+                end
+
+                LibGit2.update(submod; recursive=true, fetch=true)
+
+                commit_hash = string(LibGit2.head_oid(submod))
+                submodules[submod_path] = commit_hash
+                
+            catch e
+                println("Failed to update submodule $submod_path: ", e)
+            end
+        end
+
+        println("\nRecording submodule states...")
+        open(output_file, "w") do io
+            println(io, "Submodule Commit Hashes - Recorded on: ", Dates.now())
+            println(io, "=========================================")
+            
+            for (path, commit_hash) in submodules
+                if !isempty(commit_hash)
+                    println("Recording: $path @ $commit_hash")
+                    println(io, "Path: $path")
+                    println(io, "Commit: $commit_hash")
+                    println(io, "")
+                end
+            end
+        end
+
+        println("\nChecking for changes to commit...")
+        status = LibGit2.status(repo)
+        
+        if !isempty(status)
+            println("Committing submodule updates...")
+            idx = LibGit2.GitIndex(repo)
+            LibGit2.add!(idx, ".gitmodules")
+            LibGit2.add!(idx, "submodule_hashes.txt")
+            LibGit2.write!(idx)
+
+            tree_id = LibGit2.write_tree!(idx)
+            parents = LibGit2.isdetached(repo) ? [] : [LibGit2.head_oid(repo)]
+            sig = LibGit2.default_signature(repo)
+            LibGit2.commit(repo, "Updated submodules to latest commits and recorded hashes";
+                          tree=tree_id, parents=parents, author=sig, committer=sig)
+            println("Changes committed successfully")
+        else
+            println("No changes to commit - submodules were already up to date")
+        end
+        
+        println("\nSubmodule updates completed!")
+        println("Hashes recorded in: $output_file")
+        println("Current status:")
+        for (submod_path, commit_hash) in submodules
+            if !isempty(commit_hash)
+                println("$submod_path $commit_hash")
+            end
+        end
+        
+        LibGit2.close(repo)
         
     catch e
         println("Error occurred: ", e)

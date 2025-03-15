@@ -1,64 +1,99 @@
+using LibGit2
+
 function restore_all_submodules()
     try
-        # Find the git repository root
-        git_root = nothing
+        repo_path = nothing
         try
-            git_root = strip(read(`git rev-parse --show-toplevel`, String))
+            repo = LibGit2.GitRepo(".")
+            repo_path = LibGit2.path(repo)
+            LibGit2.close(repo)
         catch
             error("Not inside a git repository")
         end
         
-        if isempty(git_root) || !isdir(git_root)
+        if isnothing(repo_path) || !isdir(repo_path)
             error("Could not determine git repository root")
         end
 
-        # Change to git root directory for operations
-        cd(git_root) do
-            println("Working in git repository root: $git_root")
-            
-            # Get list of submodules from git config
-            println("Discovering submodules...")
-            submodules_output = read(`git submodule status --recursive`, String)
-            if isempty(strip(submodules_output))
-                println("No submodules found in this repository")
-                return
+        println("Working in git repository root: $repo_path")
+        
+        repo = LibGit2.GitRepo(repo_path)
+        
+        println("Discovering submodules...")
+        config = LibGit2.GitConfig(repo)
+        submodules = String[]
+        
+        gitmodules_path = joinpath(repo_path, ".gitmodules")
+        if isfile(gitmodules_path)
+            try
+                LibGit2.with(LibGit2.GitConfig(gitmodules_path)) do cfg
+                    i = 1
+                    while true
+                        submod_key = "submodule.$i.path"
+                        try
+                            path = LibGit2.get(cfg, submod_key, "")
+                            if !isempty(path)
+                                push!(submodules, path)
+                            end
+                            i += 1
+                        catch
+                            break
+                        end
+                    end
+                end
+            catch e
+                println("Warning: Could not parse .gitmodules: ", e)
             end
-
-            # Parse submodule paths
-            submodule_paths = String[]
-            for line in split(submodules_output, '\n')
-                if !isempty(strip(line))
-                    # Extract path (second field in submodule status output)
-                    parts = split(strip(line))
-                    if length(parts) >= 2
-                        push!(submodule_paths, parts[2])
+        end
+        
+        if isempty(submodules)
+            LibGit2.with(config) do cfg
+                for i in 1:100 
+                    try
+                        path = LibGit2.get(cfg, "submodule.sub$i.path", "")
+                        if !isempty(path)
+                            push!(submodules, path)
+                        end
+                    catch
+                        break
                     end
                 end
             end
+        end
+        
+        if isempty(submodules)
+            println("No submodules found in this repository")
+            LibGit2.close(repo)
+            return
+        end
 
-            if isempty(submodule_paths)
-                println("No active submodules found")
-                return
-            end
-
-            # Restore each submodule
-            for path in submodule_paths
-                println("\nProcessing submodule at: $path")
-                if !isdir(path)
-                    println("Warning: Submodule directory $path not found, initializing...")
-                end
-                
-                # Initialize and update each submodule
-                run(`git submodule init $path`)
-                run(`git submodule update --recursive $path`)
-                
-                # Show status for this submodule
-                println("Current status of $path:")
-                run(`git submodule status $path`)
+        for submod_path in submodules
+            println("\nProcessing submodule at: $submod_path")
+            
+            if !isdir(joinpath(repo_path, submod_path))
+                println("Warning: Submodule directory $submod_path not found, initializing...")
             end
             
-            println("\nAll submodules successfully restored to recorded commits!")
+            try
+                submod = LibGit2.GitSubmodule(repo, submod_path)
+                
+                if !LibGit2.isinit(submod)
+                    LibGit2.set_init(submod)
+                end
+                
+                LibGit2.update(submod; recursive=true)
+                
+                println("Current status of $submod_path:")
+                submod_head = LibGit2.head_oid(submod)
+                println("HEAD at: ", string(submod_head))
+                
+            catch e
+                println("Failed to process submodule $submod_path: ", e)
+            end
         end
+        
+        println("\nAll submodules successfully restored to recorded commits!")
+        LibGit2.close(repo)
         
     catch e
         println("Error occurred: ", e)
