@@ -1,14 +1,40 @@
-using LibGit2
-using Dates
+"""
+    update_julia_package_repos(repo_list::Dict{String, String})
 
-function update_julia_package_repos()
+Updates or clones Julia package repositories and maintains their status in a git repository.
+
+This function:
+1. Initializes a git repository if not already present
+2. Creates a `data/exp_raw` directory if needed
+3. For each repository in `repo_list`:
+   - Clones new repositories or updates existing ones to latest master
+4. Records the status of all repositories in `julia_repos_status.txt`
+5. Commits changes to the main repository
+
+# Arguments
+- `repo_list`: Dictionary mapping repository names (String) to their Git URLs (String)
+
+# Throws
+- Error if git repository root cannot be determined or created
+- Prints detailed error messages and exits with status 1 on failure
+
+# Examples
+```julia
+julia> repos = Dict("Pkg" => "https://github.com/JuliaLang/Pkg.jl.git",
+                    "Example" => "https://github.com/JuliaLang/Example.jl.git")
+julia> update_julia_package_repos(repos)
+Working in directory: /current/path
+Created directory: /current/path/data/exp_raw
+Cloning new repository: Pkg
+Cloned Pkg successfully
+Cloning new repository: Example
+Cloned Example successfully
+...
+Process completed!
+```
+"""
+function update_julia_package_repos(repo_list::Dict{String, String})
     try
-        repo_list = Dict(
-            "General" => "https://github.com/JuliaRegistries/General.git",
-            "Julia" => "https://github.com/JuliaLang/julia.git",
-            "Pkg" => "https://github.com/JuliaLang/Pkg.jl.git"
-        )
-        
         base_dir = "./data/exp_raw"
         
         git_root = nothing
@@ -114,8 +140,4 @@ function update_julia_package_repos()
         println("3. You have internet access to clone/pull from GitHub")
         exit(1)
     end
-end
-
-if abspath(PROGRAM_FILE) == @__FILE__
-    update_julia_package_repos()
 end

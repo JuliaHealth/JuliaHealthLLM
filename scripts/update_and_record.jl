@@ -1,6 +1,3 @@
-using LibGit2
-using Dates
-
 function update_and_record_submodules()
     try
         repo_path = nothing
@@ -123,8 +120,4 @@ function update_and_record_submodules()
         println("4. You have push access to the remote repositories")
         exit(1)
     end
-end
-
-if abspath(PROGRAM_FILE) == @__FILE__
-    update_and_record_submodules()
 end

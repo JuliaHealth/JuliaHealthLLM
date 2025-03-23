@@ -1,4 +1,35 @@
-using LibGit2
+"""
+    restore_all_submodules()
+
+Restores all Git submodules in the current repository to their recorded commits.
+
+This function:
+1. Detects if the current directory is within a Git repository
+2. Locates and parses the repository's submodules from either `.gitmodules` file or Git config
+3. For each submodule:
+   - Initializes it if not already initialized
+   - Updates it to its recorded commit
+   - Reports the current HEAD status
+4. Handles errors gracefully with appropriate feedback
+
+# Throws
+- Error if not inside a Git repository
+- Error if repository root cannot be determined
+- Prints warnings for missing submodules or parsing issues
+- Exits with status 1 on fatal errors
+
+# Examples
+```julia
+julia> cd("path/to/git/repo")
+julia> restore_all_submodules()
+Working in git repository root: /path/to/git/repo
+Discovering submodules...
+Processing submodule at: submod1
+Current status of submod1:
+HEAD at: abc123...
+All submodules successfully restored to recorded commits!
+```
+"""
 
 function restore_all_submodules()
     try
@@ -103,9 +134,4 @@ function restore_all_submodules()
         println("3. You're inside a git repository (any subdirectory)")
         exit(1)
     end
-end
-
-# Execute the function if this is the main script
-if abspath(PROGRAM_FILE) == @__FILE__
-    restore_all_submodules()
 end
