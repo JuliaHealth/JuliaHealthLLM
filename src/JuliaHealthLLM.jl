@@ -5,6 +5,7 @@ using Downloads
 using Dates
 using TextAnalysis
 using Serialization
+using Transformers, CUDA
 
 # TODO: Add functions from scripts
 include("../scripts/clone.jl")

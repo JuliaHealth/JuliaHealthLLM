@@ -2,12 +2,14 @@ name = "JuliaHealthLLM"
 authors = ["Jacob S. Zelko", "Param Thakkar"]
 
 [deps]
+CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 DotEnv = "4dc1fcf4-5e3b-5448-94ab-0c38ec0385c1"
 Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 LibPQ = "194296ae-ab2e-5f79-8cd4-7183a0a5a0d1"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+LlamaCpp = "4028143c-eef9-4a3a-9d23-34f3d8ed2047"
 PromptingTools = "670122d1-24a8-4d70-bfce-740807c42192"
 Serialization = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
 TextAnalysis = "a2db99b7-8b79-58f8-94bf-bbc811eef33d"
