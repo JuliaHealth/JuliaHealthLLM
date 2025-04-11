@@ -113,27 +113,3 @@ function traverse_repository(root_dir::String;
 
     return reduce(vcat, all_chunks)
 end
-
-function main()
-    repo_path = "data/exp_raw/TheBookOfOhdsi"
-    try
-        chunks = traverse_repository(repo_path, 
-                                   chunk_size=1000, 
-                                   chunk_overlap=200)
-        
-        println("Found $(length(chunks)) chunks:")
-        for (i, chunk) in enumerate(chunks[1:min(10, length(chunks))])
-            println("\nChunk $i:")
-            println("Source: ", chunk.metadata["source"])
-            println("Content preview: ", 
-                   length(chunk.content) > 50 ? 
-                   chunk.content[1:50] * "..." : chunk.content)
-            println("Length: ", length(chunk.content))
-        end
-    catch e
-        @error "Error processing repository: $e"
-        rethrow()
-    end
-end
-
-main()
