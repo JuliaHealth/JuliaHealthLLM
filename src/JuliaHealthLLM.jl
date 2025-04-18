@@ -3,6 +3,7 @@ module JuliaHealthLLM
 using LibGit2
 using Downloads
 using Dates
+using PromptingTools
 using TextAnalysis
 using Serialization, Base.Threads
 using Transformers, CUDA
@@ -15,7 +16,6 @@ include("../scripts/knowledge.jl")
 include("../scripts/restore_submodules.jl")
 include("../scripts/update_julia_package_repos.jl")
 include("../scripts/update_and_record.jl")
-include("../scripts/load_model.jl")
 include("../src/chunk_docs.jl")
 
 export clone_repositories, normalize_repo_url, clone_repo, is_textual_file,
