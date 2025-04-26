@@ -3,14 +3,16 @@ using PromptingTools
 using PromptingTools.Experimental.RAGTools: FileChunker, build_index, SimpleIndexer, airag
 using JSON3, Serialization
 using Statistics: mean
+using FileIO
+using JLD2
 const PT = PromptingTools
 const RT = PromptingTools.Experimental.RAGTools
 
-# Register models with Ollama schema
+# Register models
 PT.register_model!(name="deepseek-r1:1.5b", schema=PT.OllamaSchema())
 PT.register_model!(name="nomic-embed-text:latest", schema=PT.OllamaSchema())
 
-# Function to collect files with specified extensions
+# File collection and combination functions (unchanged)
 function collect_files_with_extensions(directory::String, extensions::Vector{String})
     files = String[]
     for (root, _, file_names) in walkdir(directory)
@@ -24,7 +26,6 @@ function collect_files_with_extensions(directory::String, extensions::Vector{Str
     return files
 end
 
-# Function to combine files into a single output file
 function write_combined_file(files::Vector{String}, output_file::String)
     open(output_file, "w") do io
         for file in files
@@ -34,7 +35,7 @@ function write_combined_file(files::Vector{String}, output_file::String)
                     println(io, line)
                 end
             end
-            println(io, "\n")  # Add a separator between files
+            println(io, "\n")
         end
     end
 end
@@ -48,15 +49,44 @@ output_file = "combined_output.txt"
 files = collect_files_with_extensions(directory, extensions)
 write_combined_file(files, output_file)
 
-# Build index with explicit Ollama schema for embeddings
+# Build index
 cfg = SimpleIndexer(chunker=FileChunker())
-index = build_index(cfg, [output_file]; embedder_kwargs = (schema = PT.OllamaSchema(), model = "nomic-embed-text:latest"))
+index = build_index(cfg, [output_file]; 
+    embedder_kwargs = (
+        schema = PT.OllamaSchema(), 
+        model = "nomic-embed-text:latest"
+    )
+)
 println("Index built with $(length(index)) chunks.")
 
-# Perform RAG query with explicit embedder_kwargs in retriever_kwargs
+# Save the index
+index_file = "index.jld2"
+println("Saving index to $index_file...")
+@save index_file index
+println("Index saved successfully.")
+
+# Perform RAG query
 answer = airag(index; 
     question = "Write a FunSQL.jl query to find all male patients in the database?",
-    retriever_kwargs = (model = "nomic-embed-text:latest", schema = PT.OllamaSchema(), embedder_kwargs = (schema = PT.OllamaSchema(), model = "nomic-embed-text:latest")),
-    generator_kwargs = (model = "deepseek-r1:1.5b", schema = PT.OllamaSchema())
+    verbose = 2,
+    retriever_kwargs = (
+        model = "deepseek-r1:1.5b", 
+        schema = PT.OllamaSchema(), 
+        embedder_kwargs = (
+            schema = PT.OllamaSchema(), 
+            model = "nomic-embed-text:latest", 
+            api_key = "ollama-dummy-key"
+        )
+    ),
+    generator_kwargs = (
+        model = "deepseek-r1:1.5b", 
+        schema = PT.OllamaSchema(), 
+        embedder_kwargs = (
+            schema = PT.OllamaSchema(), 
+            model = "nomic-embed-text:latest", 
+            api_key = "ollama-dummy-key"
+        )
+    ),
+    api_kwargs = (api_key = "ollama-dummy-key",)
 )
 println(answer)
