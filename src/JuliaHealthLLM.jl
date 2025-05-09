@@ -1,25 +1,19 @@
 module JuliaHealthLLM
 
-using LibGit2
-using Downloads
-using Dates
 using PromptingTools
-using TextAnalysis
-using Serialization, Base.Threads
-using Transformers, CUDA
-using LlamaCpp, JSON3, HuggingFaceTokenizers, Jjama3
-using JSON, Markdown
+using PromptingTools.Experimental.RAGTools
+using LinearAlgebra, SparseArrays
+using JSON3, Serialization
+using Statistics
+using LibPQ
 
-# TODO: Add functions from scripts
-include("../scripts/clone.jl")
-include("../scripts/knowledge.jl")
-include("../scripts/restore_submodules.jl")
-include("../scripts/update_julia_package_repos.jl")
-include("../scripts/update_and_record.jl")
-include("../src/chunk_docs.jl")
+include("utils.jl")
+include("pgvector.jl")
+include("database.jl")
+include("embedding.jl")
+include("query.jl")
 
-export clone_repositories, normalize_repo_url, clone_repo, is_textual_file,
-       build_corpus_from_repo, save_corpus, process_directory, update_and_record_submodules,
-       restore_all_submodules, update_julia_package_repos, chunk_file_content, traverse_repository
+export collect_files_with_extensions, write_combined_file, generate_funsql_query,
+build_index_rag, store_embeddings_pgvector
 
 end
