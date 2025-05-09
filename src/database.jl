@@ -1,5 +1,5 @@
 module Database
-
+using LibPQ
 function store_embeddings_pgvector(conn::LibPQ.Connection, embeddings::AbstractMatrix, chunks::AbstractVector, embedding_dimension::Int)
     LibPQ.execute(conn, """
         CREATE TABLE IF NOT EXISTS embeddings (

@@ -5,7 +5,6 @@ using PromptingTools.Experimental.RAGTools
 using LinearAlgebra, SparseArrays
 using JSON3, Serialization
 using Statistics
-using LibPQ
 
 include("utils.jl")
 include("pgvector.jl")
