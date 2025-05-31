@@ -1,0 +1,13 @@
+name = "JuliaHealthLLM"
+uuid = "3320e2f9-3111-498f-a583-fdbf55b5a73e"
+authors = ["ParamThakkar123 <paramthakkar864@gmail.com>", "TheCedarPrince <jacobszelko@gmail.com> and contributors"]
+version = "0.0.1"
+
+[compat]
+julia = "1.10"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
