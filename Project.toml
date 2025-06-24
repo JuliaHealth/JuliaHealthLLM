@@ -22,7 +22,15 @@ SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 TextAnalysis = "a2db99b7-8b79-58f8-94bf-bbc811eef33d"
 Transformers = "21ca0261-441d-5938-ace7-c90938fde4d4"
+uuid = "3320e2f9-3111-498f-a583-fdbf55b5a73e"
+authors = ["ParamThakkar123 <paramthakkar864@gmail.com>", "TheCedarPrince <jacobszelko@gmail.com> and contributors"]
+version = "0.0.1"
 
 [compat]
-DrWatson = "2.18"
-julia = "1.10.5"
+julia = "1.10"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
