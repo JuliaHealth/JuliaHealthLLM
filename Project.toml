@@ -1,13 +1,17 @@
 name = "JuliaHealthLLM"
+uuid = "3320e2f9-3111-498f-a583-fdbf55b5a73e"
 authors = ["Jacob S. Zelko", "Param Thakkar"]
+version = "0.0.1"
 
 [deps]
 CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+CondaPkg = "992eb4ea-22a4-4c89-a5bb-47a3300528ab"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 DotEnv = "4dc1fcf4-5e3b-5448-94ab-0c38ec0385c1"
 Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+HealthBase = "94e1309d-ccf4-42de-905f-515f1d7b1cae"
 HuggingFaceTokenizers = "a6888d44-1185-43bb-bd0f-7806f9976d18"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
@@ -22,11 +26,11 @@ SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 TextAnalysis = "a2db99b7-8b79-58f8-94bf-bbc811eef33d"
 Transformers = "21ca0261-441d-5938-ace7-c90938fde4d4"
-uuid = "3320e2f9-3111-498f-a583-fdbf55b5a73e"
-authors = ["ParamThakkar123 <paramthakkar864@gmail.com>", "TheCedarPrince <jacobszelko@gmail.com> and contributors"]
-version = "0.0.1"
 
 [compat]
+CondaPkg = "0.2.29"
+DrWatson = "2.18.0"
+HealthBase = "2.0.0"
 julia = "1.10"
 
 [extras]
