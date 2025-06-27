@@ -29,6 +29,7 @@ Transformers = "21ca0261-441d-5938-ace7-c90938fde4d4"
 
 [compat]
 CondaPkg = "0.2.29"
+DotEnv = "1"
 DrWatson = "2.18.0"
 HealthBase = "2.0.0"
 julia = "1.10"
