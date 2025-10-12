@@ -1,0 +1,3 @@
+[PromptingTools]
+MODEL_CHAT = "deepseek-r1:1.5b"
+PROMPT_SCHEMA = "OllamaSchema"
