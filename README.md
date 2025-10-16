@@ -41,3 +41,5 @@ See [`CITATION.bib`](CITATION.bib) for the relevant reference(s).
 
 ## JuliaCon Talk Video
 [JuliaCon Talk on JuliaHealthLLM.jl](https://www.youtube.com/watch?v=oeYhwagpI98&t=21614s)
+<img width="276" height="97" alt="image" src="https://github.com/user-attachments/assets/783e88e5-ab6e-4184-b9c5-c4a938c20330" />
+
