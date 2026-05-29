@@ -1,7 +1,7 @@
 name = "JuliaHealthLLM"
 uuid = "3320e2f9-3111-498f-a583-fdbf55b5a73e"
-authors = ["Jacob S. Zelko", "Param Thakkar"]
 version = "0.0.1"
+authors = ["Jacob S. Zelko", "Param Thakkar"]
 
 [deps]
 CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
@@ -33,7 +33,7 @@ CUDA = "5"
 CondaPkg = "0.2.29"
 DotEnv = "1"
 DrWatson = "2.18.0"
-HTTP = "1.10"
+HTTP = "1.10, 2"
 HealthBase = "2.0.0"
 HuggingFaceTokenizers = "0.1"
 JLD2 = "0.5, 0.6"
